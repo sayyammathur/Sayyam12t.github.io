@@ -1,49 +1,537 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="./images/logo.jpg">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://kit.fontawesome.com/7c4dc178f1.js" crossorigin="anonymous"></script>
-
-  </script>
-  <title>TODoList</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Certificate Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bubblegum+Sans&family=Cinzel:wght@400;700;900&family=Dancing+Script&family=Fredoka:wght@400;600&family=Great+Vibes&family=Lora:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@400;700&family=Pacifico&family=Playfair+Display:wght@400;700;900&family=Poppins:wght@400;600&display=swap"
+        rel="stylesheet">
+    <!-- SheetJS for Excel Parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <h1>TODo List</h1>
-  <!-- mani is for the container for the to do list -->
-  <main>
-    <!-- section for the adding input to the task list -->
-    <section class="inputContainer">
-      <i class="fa-solid fa-scroll"></i>
-      <input type="text" placeholder="Add a task" data-task="input" id="input" class="inputData" required>
-      <!-- <button id="but"><i class="fa fa-plus-circle add" aria-hidden="true"></i></button> -->
-    </section>
-    <i class="fa-solid fa-check-double dobCheck" style="color: #828282;"></i><span>completed all tasks</span>
-    <div class="space"></div>
-    <span class="deltAll">Clear completed</span>
-    <hr>
+    <!-- Controls (hidden in print) -->
+    <section class="controls" aria-label="Certificate Controls">
 
-    <!-- this unordered list for get a list that gets in order and mark as check and delete -->
-    <ul id="list">
-      <!-- <li>
-        <input type="checkbox">
-        <label for="task1">Buy Groceries</label>
-        <button>
-          <i class="fa fa-trash-o" aria-hidden="true"></i>
-        </button>
-      </li> -->
-    </ul>
-    <hr>
-    <div class="complete">
-      <p>Total tasks left:<span id="taskCount">0</span></p>
-      <span class="incomplete" style="margin-left: 0px;">Incomplete</span>
-      <span class="completed">Completed</span>
-    </div>
+        <!-- GLOBAL SETTINGS (Applies to BOTH Single and Bulk) -->
+        <h3
+            style="margin-top:0; border-bottom:2px solid #ddd; padding-bottom:10px; color:var(--c-accent); display: flex; justify-content: space-between; align-items: center;">
+            <span>1. Global Settings (Applies to All)</span>
+            <button id="toggleSmartFill" type="button"
+                style="font-size: 12px; background: #6c5ce7; color: white; border: none; padding: 4px 12px; border-radius: 20px; cursor: pointer; transition: all 0.3s ease;">
+                🪄 AI Smart Fill
+            </button>
+        </h3>
+
+        <!-- AI Smart Fill Panel -->
+        <div id="smartFillPanel"
+            style="display: none; background: #f0f0ff; border: 1px solid #6c5ce7; padding: 15px; margin-bottom: 20px; border-radius: 8px; animation: slideDown 0.3s ease;">
+            <p style="margin-top: 0; font-size: 13px; color: #4834d4; font-weight: bold;">Tell AI what kind of
+                certificate
+                you want:</p>
+            <div style="display: flex; gap: 10px;">
+                <input id="smartFillPrompt" type="text"
+                    placeholder="e.g. Science Fair winners, Best Dancer, Math Wizard..."
+                    style="flex: 1; padding: 10px; border-radius: 4px; border: 1px solid #ddd;" />
+                <button id="btnApplySmartFill" type="button"
+                    style="background: #6c5ce7; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                    Magic Fill ✨
+                </button>
+            </div>
+            <p style="font-size: 11px; color: #666; margin-top: 8px;">The AI will automatically set the School, Title,
+                and
+                Message for you!</p>
+        </div>
+
+        <div class="controls__row">
+            <div class="controls__group">
+                <label>School Name</label>
+                <input id="schoolName" type="text" value="DELHI WORLD PUBLIC SCHOOL, ASHTA" />
+            </div>
+            <div class="controls__group">
+                <label>School Code / Affiliation</label>
+                <input id="schoolCode" type="text" value="Affiliation No: XXXXXX" />
+            </div>
+            <div class="controls__group">
+                <label>Certificate Title</label>
+                <input id="certTitle" type="text" value="Graduation Certificate" />
+            </div>
+            <div class="controls__group">
+                <label>Session</label>
+                <input id="session" type="text" value="SESSION 2025–26" />
+            </div>
+            <div class="controls__group">
+                <label>Issue Date</label>
+                <input id="issueDate" type="text" value="20-Feb-2026" />
+            </div>
+        </div>
+        <div class="controls__row">
+            <div class="controls__group">
+                <label>Principal Name</label>
+                <input id="principalName" type="text" value="Dr. Sangeeta Sinha" />
+            </div>
+            <div class="controls__group">
+                <label>Principal Designation</label>
+                <input id="principalDesignation" type="text" value="Principal" />
+            </div>
+
+            <div class="controls__group">
+                <label>Teacher Name</label>
+                <input id="teacherName" type="text" value="(Optional Name)" />
+            </div>
+            <div class="controls__group">
+                <label>Teacher Designation</label>
+                <input id="teacherDesignation" type="text" value="Class Teacher" />
+            </div>
+
+            <div class="controls__group">
+                <label>Date (Issue Date)</label>
+                <input type="text" value="20-Feb-2026" disabled style="background:#f0f0f0; border:none;" />
+            </div>
+            <div class="controls__group">
+                <label>Theme</label>
+                <select id="theme">
+                    <option value="classic">Force (Green)</option>
+                    <option value="gold">Royal Gold</option>
+                    <option value="red">Academic Red</option>
+                    <option value="playful">Playful (Kids)</option>
+                    <option value="space">Space Odyssey</option>
+                    <option value="sea">Deep Sea</option>
+                    <option value="royal">Classic Double Gold</option>
+                </select>
+            </div>
+            <div class="controls__group">
+                <label>Font Style</label>
+                <select id="fontStyle">
+                    <option value="default">Theme Default</option>
+                    <option value="serif">Lora (Serif)</option>
+                    <option value="sans">Montserrat (Modern)</option>
+                    <option value="script">Dancing (Script)</option>
+                    <option value="classic">Cinzel (Classic)</option>
+                    <option value="kids">Fredoka (Kids)</option>
+                    <option value="hand">Pacifico (Creative)</option>
+                    <option value="pop">Poppins (Clean)</option>
+                    <option value="bold">Bebas (Bold Title)</option>
+                </select>
+            </div>
+            <div class="controls__group" style="flex: 0 0 auto; justify-content: center;">
+                <label style="cursor: pointer;"><input type="checkbox" id="boldTitles" checked> Bold Title?
+                    <b>(B)</b></label>
+            </div>
+        </div>
+
+        <div class="controls__row">
+            <div class="controls__group controls__group--wide">
+                <label>Certificate Text
+                    <label
+                        style="display:inline; margin-left:10px; font-weight:normal; font-size:11px; color:#444;"><input
+                            type="checkbox" id="certTextBold"> Bold Message?</label>
+                    <button id="toggleAiBtn" type="button"
+                        style="padding: 2px 8px; font-size: 11px; margin-left: 10px; background: linear-gradient(45deg, #6c5ce7, #a29bfe); color: white; border: none; border-radius: 4px; cursor: pointer;">✨
+                        AI Magic Assistant</button>
+                </label>
+                <textarea id="certText"
+                    rows="2">Congratulations on your outstanding achievement in completing&#10;UPPER KINDERGARTEN&#10;We are so proud of you. Keep shining bright as you move forward to new adventures in your learning journey!</textarea>
+
+                <!-- Hidden AI Panel -->
+                <div id="aiPanel"
+                    style="display: none; background: #f0f0ff; border: 1px dashed #6c5ce7; padding: 10px; margin-top: 5px; border-radius: 6px;">
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <div class="controls__group">
+                            <label style="font-size: 11px;">Category</label>
+                            <select id="aiCategory" style="padding: 3px; font-size: 11px;">
+                                <option value="graduation">Graduation</option>
+                                <option value="sports">Sports / Physical</option>
+                                <option value="art">Art & Creativity</option>
+                                <option value="academic">Academic Excellence</option>
+                                <option value="behavior">Good Behavior / Values</option>
+                            </select>
+                        </div>
+                        <div class="controls__group">
+                            <label style="font-size: 11px;">Tone</label>
+                            <select id="aiTone" style="padding: 3px; font-size: 11px;">
+                                <option value="formal">Professional & Formal</option>
+                                <option value="playful">Playful & Sweet (Kids)</option>
+                                <option value="inspiring">Inspirational</option>
+                            </select>
+                        </div>
+                        <button id="btnAiGenerate" type="button"
+                            style="background: #6c5ce7; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-top: 15px;">Generate
+                            Message</button>
+                    </div>
+                </div>
+            </div>
+            <div class="controls__group">
+                <label>Global School Logo</label>
+                <input id="logoUpload" type="file" accept="image/*" />
+            </div>
+        </div>
+
+        <!-- Magic AI Themes Gallery -->
+        <h3 style="margin-top:20px; border-bottom:2px solid #ddd; padding-bottom:10px; color:var(--c-accent);">2. Magic
+            AI
+            Themes (One-Click Selection)</h3>
+        <div class="ai-gallery"
+            style="display: flex; gap: 15px; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #ddd; overflow-x: auto;">
+            <div class="ai-theme-item" onclick="applyAiTheme('playful_background.png', '#48a000', 'row-reverse')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <img src="playful_background.png"
+                    style="width: 100px; height: 70px; object-fit: cover; border-radius: 4px; border: 2px solid #ddd; display: block; margin-bottom: 5px;">
+                <span style="font-size: 11px; font-weight: bold;">Playground</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('rainbow_garden.png', '#e67e22', 'row-reverse')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <img src="rainbow_garden.png"
+                    style="width: 100px; height: 70px; object-fit: cover; border-radius: 4px; border: 2px solid #ddd; display: block; margin-bottom: 5px;">
+                <span style="font-size: 11px; font-weight: bold;">Rainbow Garden</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('sunny_school.png', '#3498db', 'row')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <img src="sunny_school.png"
+                    style="width: 100px; height: 70px; object-fit: cover; border-radius: 4px; border: 2px solid #ddd; display: block; margin-bottom: 5px;">
+                <span style="font-size: 11px; font-weight: bold;">Sunny School</span>
+            </div>
+
+            <!-- CSS Based AI Themes -->
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#a29bfe', 'row', 'space', 'sans')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 4px; border: 2px solid #ddd; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
+                    🌌</div>
+                <span style="font-size: 11px; font-weight: bold;">Space Odyssey</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#00d2ff', 'row-reverse', 'sea', 'serif')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: linear-gradient(to bottom, #00d2ff, #3a7bd5); border-radius: 4px; border: 2px solid #ddd; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
+                    🌊</div>
+                <span style="font-size: 11px; font-weight: bold;">Deep Sea</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#d4af37', 'row', 'royal', 'classic')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: #fff; border: 2px solid #d4af37; border-radius: 4px; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: #d4af37; font-size: 20px;">
+                    🔱</div>
+                <span style="font-size: 11px; font-weight: bold;">Royal Gold</span>
+            </div>
+
+            <div style="flex: 1; display: flex; align-items: center; justify-content: center; color: #999;">
+                <p style="font-size: 12px; font-style: italic;">Tap a theme to instantly apply its design ✨</p>
+            </div>
+        </div>
+
+        <!-- 3. DESIGN CUSTOMIZATION (Canva-like) -->
+        <h3 style="margin-top:20px; border-bottom:2px solid #ddd; padding-bottom:10px; color:var(--c-accent);">3. Design
+            Customization (Canva Style)</h3>
+        <div class="controls__row" style="background:#f9f9f9; padding:10px; border-radius:8px;">
+            <div class="controls__group">
+                <label>Custom BG Image</label>
+                <input id="customBgUpload" type="file" accept="image/*" />
+            </div>
+            <div class="controls__group">
+                <label>Name Color</label>
+                <input id="nameColor" type="color" value="#000000" />
+            </div>
+            <div class="controls__group">
+                <label>Accent Color</label>
+                <input id="accentColor" type="color" value="#116a4c" />
+            </div>
+            <div class="controls__group">
+                <label>Photo Position</label>
+                <select id="layoutOrder">
+                    <option value="row">Photo Left (Classic)</option>
+                    <option value="row-reverse">Photo Right (Playful)</option>
+                </select>
+            </div>
+            <div class="controls__group">
+                <label>Text Align</label>
+                <select id="textAlign">
+                    <option value="center">Center</option>
+                    <option value="left">Left</option>
+                </select>
+            </div>
+            <div class="controls__group">
+                <label>Name Size (pt)</label>
+                <input id="nameFontSize" type="range" min="20" max="60" value="34" />
+            </div>
+            <div class="controls__group">
+                <label>School Size (pt)</label>
+                <input id="schoolFontSize" type="range" min="20" max="45" value="30" />
+            </div>
+            <div class="controls__group">
+                <label>Body Size (pt)</label>
+                <input id="bodyFontSize" type="range" min="10" max="25" value="12" />
+            </div>
+            <div class="controls__group">
+                <label>Vertical Spacing</label>
+                <input id="verticalGap" type="range" min="0" max="15" value="5" />
+            </div>
+            <div class="controls__group">
+                <label>Photo Width (mm)</label>
+                <input id="photoWidth" type="range" min="30" max="70" value="45" />
+            </div>
+        </div>
+
+        <!-- TABS for Data Source -->
+        <h3 style="margin-top:20px; border-bottom:2px solid #ddd; padding-bottom:10px; color:var(--c-accent);">4.
+            Student Data Source</h3>
+
+        <div class="tabs">
+            <button id="tabSingle" class="tab-btn active">Single Entry</button>
+            <button id="tabBulk" class="tab-btn">Bulk Upload (Excel)</button>
+        </div>
+
+        <!-- Single Controls -->
+        <div id="panelSingle">
+            <div class="controls__row">
+                <div class="controls__group">
+                    <label>Student Name</label>
+                    <input id="studentName" type="text" value="Student Name Here" />
+                </div>
+
+                <div class="controls__group">
+                    <label>Class</label>
+                    <input id="studentClass" type="text" value="UPPER KINDERGARTEN" />
+                </div>
+
+                <div class="controls__group">
+                    <label>Student Photo</label>
+                    <input id="photoUpload" type="file" accept="image/*" />
+                </div>
+
+                <div class="controls__group">
+                    <label>&nbsp;</label>
+                    <button id="printBtn" type="button" style="background:var(--c-accent); color:white;">Print Single
+                        Certificate</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bulk Controls -->
+        <div id="panelBulk" style="display: none;">
+            <h3 style="margin-top:20px; border-bottom:2px solid #ddd; padding-bottom:10px; color:var(--c-accent);">4.
+                Bulk Data Source (Choose Your Method)</h3>
+
+            <div class="data-source-grid"
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                <!-- Option A: Excel -->
+                <div class="source-card"
+                    style="background:#fff; padding:15px; border-radius:8px; border:1px solid #ddd;">
+                    <label style="font-weight:bold; color:var(--c-accent); display:block; margin-bottom:8px;">A. Bulk
+                        Excel Upload</label>
+                    <input id="excelUpload" type="file" accept=".xlsx, .xls, .csv" style="width:100%;" />
+                    <p class="hint">Upload .xlsx with "Name" column.</p>
+                </div>
+
+                <!-- Option B: Manual Names -->
+                <div class="source-card"
+                    style="background:#fff; padding:15px; border-radius:8px; border:1px solid #ddd;">
+                    <label
+                        style="font-weight:bold; color:var(--c-accent); display:flex; justify-content:space-between; margin-bottom:8px;">
+                        B. Paste Student Names
+                        <button id="btnAiMagicNames" type="button"
+                            style="font-size:10px; background:#6c5ce7; color:white; border:none; padding:2px 6px; border-radius:10px; cursor:pointer;">🪄
+                            AI Magic</button>
+                    </label>
+                    <textarea id="bulkNamesInput" rows="2" placeholder="One name per line..."
+                        style="width:100%;"></textarea>
+                </div>
+
+                <!-- Option C: Photos (Folder or Files) -->
+                <div class="source-card"
+                    style="background:#fff; padding:15px; border-radius:8px; border:1px solid #ddd;">
+                    <label style="font-weight:bold; color:var(--c-accent); display:block; margin-bottom:8px;">C. Student
+                        Photos (Folder or Files)</label>
+
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div>
+                            <span style="font-size: 11px; color: #666; display: block; margin-bottom: 2px;">📁 Upload
+                                Folder:</span>
+                            <input id="bulkPhotoUpload" type="file" webkitdirectory directory multiple
+                                style="width:100%; font-size: 11px;" />
+                        </div>
+                        <div style="border-top: 1px dashed #eee; padding-top: 5px;">
+                            <span style="font-size: 11px; color: #666; display: block; margin-bottom: 2px;">🖼️ Select
+                                Files:</span>
+                            <input id="bulkFilesUpload" type="file" multiple accept="image/*"
+                                style="width:100%; font-size: 11px;" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div
+                style="margin-bottom: 20px; background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="bulkIncludeDate" checked> Include Issue Date on Bulk Certificates?
+                </label>
+            </div>
+
+            <div
+                style="margin-top:20px; text-align:center; background:#eef9f5; padding:20px; border-radius:10px; border:1px solid #2ecc71;">
+                <p id="bulkStatus" style="font-weight:bold; color:#27ae60; margin-bottom:15px; font-size: 1.1em;">Ready
+                    to generate certificates. ✨</p>
+                <div style="display:flex; gap:10px; justify-content:center; flex-wrap: wrap;">
+                    <button id="btnGenerateBulk" type="button"
+                        style="background:#2ecc71; color:white; padding:12px 25px; font-weight: bold;">Generate Bulk
+                        Certificates 🚀</button>
+                    <button id="printBulkBtn" type="button"
+                        style="background:#3498db; color:white; padding:12px 25px; font-weight: bold;">Print All (PDF)
+                        🖨️</button>
+                    <button id="btnClearBulk" type="button"
+                        style="background:#e74c3c; color:white; padding:12px 20px;">Reset Data ✖</button>
+                </div>
+            </div>
+        </div>
+
+        <p class="hint">
+            Tip: Set <b>Landscape</b> and <b>Margins: None</b> in your print settings.
+        </p>
+    </section>
+
+    <!-- Main Output Area -->
+    <main>
+        <!-- Single View Container -->
+        <div id="singleContainer" class="page">
+            <article class="certificate theme-classic" id="certificate" aria-label="Generated Certificate">
+                <!-- Decorative Borders & Corners -->
+                <div class="border-container">
+                    <div class="inner-border"></div>
+                    <!-- Vertical Date in Left Border -->
+                    <div class="vertical-date" id="vIssueDate">20-Feb-2026</div>
+                </div>
+
+                <!-- Header -->
+                <header class="cert-header-top">
+                    <!-- School Code Top Right -->
+                    <div class="school-code" id="vSchoolCode">Affiliation No: XXXXXX</div>
+
+                    <div class="logo-box-top">
+                        <img id="logoImg" alt="School Logo" style="display: none;" />
+                        <div class="logo-placeholder" id="logoPlaceholder">LOGO</div>
+                    </div>
+                    <div class="school-info-top">
+                        <div class="cert-school" id="vSchoolName">DELHI WORLD PUBLIC SCHOOL, ASHTA</div>
+                    </div>
+                </header>
+
+                <div class="cert-content-grid">
+                    <!-- Left Column: Student Photo -->
+                    <div class="left-col">
+                        <div class="photo-box">
+                            <img id="startPhoto" src="https://assets.codepen.io/t-1/student-icon-placeholder.png"
+                                alt="Student Photo" style="display:block; opacity: 0.5; width: 80%; margin: 0 auto;">
+                            <img id="photoImg" alt="Student Photo" style="display: none;" />
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Certificate Details -->
+                    <div class="right-col">
+                        <div class="divider-ornament">✦ ✦ ✦</div>
+                        <div class="cert-title" id="vCertTitle">GRADUATION CERTIFICATE</div>
+                        <div class="divider-line"></div>
+                        <div class="present-line">This is to certify that</div>
+                        <div class="cert-text-block">
+                            <div class="cert-text-small">has successfully completed</div>
+                            <div class="class-name-large" id="vStudentClass">UPPER KINDERGARTEN</div>
+                            <div class="student-name" id="vStudentName">Student Name Here</div>
+                            <div class="cert-body-text" id="vCertText">
+                                Congratulations on your outstanding achievement in completing
+                                <br><strong>UPPER KINDERGARTEN</strong><br>
+                                We are so proud of you. Keep shining bright as you move forward to new adventures in
+                                your learning journey!
+                            </div>
+                        </div>
+                        <div class="divider-line-bottom"></div>
+                        <footer class="cert-footer" id="certFooter">
+                            <div class="sign-box">
+                                <div class="sign-line"></div>
+                                <div class="sign-name" id="vPrincipalName">Dr. Sangeeta Sinha</div>
+                                <div class="sign-role" id="vPrincipalDesignation">Principal</div>
+                            </div>
+                            <div class="sign-box">
+                                <div class="sign-line"></div>
+                                <div class="sign-name" id="vTeacherName"></div>
+                                <div class="sign-role" id="vTeacherDesignation">Class Teacher</div>
+                            </div>
+                        </footer>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Bulk Output Container -->
+        <div id="bulkContainer"></div>
+
+        <!-- Template for Bulk Generation -->
+        <template id="certTemplate">
+            <div class="page page-break">
+                <article class="certificate theme-classic">
+                    <div class="border-container">
+                        <div class="inner-border"></div>
+                        <div class="vertical-date tpl-date">DATE</div>
+                    </div>
+                    <header class="cert-header-top">
+                        <div class="school-code tpl-code"></div>
+                        <div class="logo-box-top">
+                            <img class="tpl-logo" alt="School Logo" style="display: none;" />
+                            <div class="logo-placeholder tpl-logo-ph">LOGO</div>
+                        </div>
+                        <div class="school-info-top">
+                            <div class="cert-school tpl-school"></div>
+                        </div>
+                    </header>
+                    <div class="cert-content-grid">
+                        <div class="left-col">
+                            <div class="photo-box">
+                                <img class="tpl-photo-ph"
+                                    src="https://assets.codepen.io/t-1/student-icon-placeholder.png"
+                                    style="display:block; opacity: 0.5; width: 80%; margin: 0 auto;">
+                                <img class="tpl-photo" alt="Student Photo" style="display: none;" />
+                            </div>
+                        </div>
+                        <div class="right-col">
+                            <div class="divider-ornament">✦ ✦ ✦</div>
+                            <div class="cert-title tpl-title"></div>
+                            <div class="divider-line"></div>
+                            <div class="present-line">This is to certify that</div>
+                            <div class="cert-text-block">
+                                <div class="cert-text-small">has successfully completed</div>
+                                <div class="class-name-large tpl-class"></div>
+                                <div class="student-name tpl-name"></div>
+                                <div class="cert-body-text tpl-body"></div>
+                            </div>
+                            <div class="divider-line-bottom"></div>
+                            <footer class="cert-footer">
+                                <div class="sign-box">
+                                    <div class="sign-line"></div>
+                                    <div class="sign-name tpl-principal-name"></div>
+                                    <div class="sign-role tpl-principal-role"></div>
+                                </div>
+                                <div class="sign-box">
+                                    <div class="sign-line"></div>
+                                    <div class="sign-name tpl-teacher-name"></div>
+                                    <div class="sign-role tpl-teacher-role"></div>
+                                </div>
+                            </footer>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </template>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
 
     <script src="script.js"></script>
   </main>
