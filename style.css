@@ -1,175 +1,672 @@
+/* CSS for Certificate Generator */
+
+:root {
+    --c-accent: #116a4c;
+    /* User custom color variable */
+    --c-name: #000000;
+    --n-size: 34pt;
+    --s-size: 30pt;
+    --b-size: 12pt;
+    --v-gap: 5mm;
+    --p-width: 45mm;
+    --c-dark: #1a1a1a;
+    --c-soft: #f7f3f0;
+    --font-header: 'Cinzel', serif;
+    --font-script: 'Great Vibes', cursive;
+    --font-body: 'Lora', serif;
+}
+
+/* Design Customization Utilities */
+.certificate {
+    --bg-dynamic: none;
+    background-image: var(--bg-dynamic) !important;
+}
+
+.layout-reverse .cert-content-grid {
+    flex-direction: row-reverse !important;
+}
+
+.layout-normal .cert-content-grid {
+    flex-direction: row !important;
+}
+
+.bold-titles .cert-title,
+.bold-titles .tpl-title {
+    font-weight: 900 !important;
+}
+
+.align-left .right-col {
+    text-align: left !important;
+    align-items: flex-start !important;
+}
+
+.align-center .right-col {
+    text-align: center !important;
+    align-items: center !important;
+}
+
+.align-left .cert-footer {
+    justify-content: flex-start !important;
+    gap: 20mm;
+}
+
+.align-center .cert-footer {
+    justify-content: space-around !important;
+}
+
+.source-card {
+    transition: all 0.3s ease;
+}
+
+.source-card:hover {
+    border-color: var(--c-accent) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background-color: #fcfdfe !important;
+}
+
+.ai-theme-item:hover img {
+    border-color: var(--c-accent) !important;
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+}
+
+/* Font Overrides */
+.font-serif {
+    --font-header: 'Playfair Display', serif;
+    --font-body: 'Playfair Display', serif;
+}
+
+.font-sans {
+    --font-header: 'Montserrat', sans-serif;
+    --font-body: 'Montserrat', sans-serif;
+}
+
+.font-script {
+    --font-header: 'Dancing Script', cursive;
+    --font-body: 'Montserrat', sans-serif;
+}
+
+.font-classic {
+    --font-header: 'Cinzel', serif;
+    --font-body: 'Lora', serif;
+}
+
+.font-kids {
+    --font-header: 'Fredoka', sans-serif;
+    --font-body: 'Fredoka', sans-serif;
+}
+
+.font-hand {
+    --font-header: 'Pacifico', cursive;
+    --font-body: 'Poppins', sans-serif;
+}
+
+.font-pop {
+    --font-header: 'Poppins', sans-serif;
+    --font-body: 'Poppins', sans-serif;
+}
+
+.font-bold {
+    --font-header: 'Bebas Neue', sans-serif;
+    --font-body: 'Montserrat', sans-serif;
+}
+
 * {
     box-sizing: border-box;
-    font-size: 1.2rem;
-  }
-  
-  body {
-    margin: 0;
-    text-align: center;
-  }
-  
-  /* to do task container */
-  main {
-    width: 700px;
-    margin: 10px auto;
-    padding: 20px;
-    box-shadow: 0px 0px 20px 3px #6d758d;
-    border-radius: 15px;
-  }
-  
-  /* Input container */
-  .inputContainer {
-    padding: 10px 20px;
-    background-color: hsl(209, 20%, 95%);
-    border-radius: 10px;
-  }
-  
-  input[type=text] {
-    width: 85%;
-    margin: 5px;
-    outline: none;
-    border: 0;
-    font-weight: 500;
-    background-color: transparent;
-  }
-  
-  .inputContainer:active,
-  .inputContainer input:visited {
-    background-color: hsl(209, 20%, 80%);
-  }
-  
-  .inputContainer>i {
-    font-size: 1.5rem;
-  }
-  
-  .inputContainer a i {
-    font-size: 0.8rem;
-    border: 2.5px solid black;
-    border-radius: 50%;
-    color: hsl(209, 20%, 95%);
-    cursor: pointer;
-  }
-  
-  
-  .space {
-    display: inline;
-    margin: 0px 180px;
-  }
-  
-  .inputContainer~span {
-    color: hsl(206, 5%, 73%);
-    font-size: 0.8rem;
-    font-weight: lighter;
-    cursor: pointer;
-  }
-  
-  .inputContainer~span:hover,
-  .inputContainer~span:active {
-    color: hsl(210, 2%, 57%);
-  }
-  
-  
-  .dobCheck {
-    color: hsl(206, 5%, 73%);
-    font-size: 1.1rem;
-    margin-right: 20px;
-    font-weight: lighter;
-    cursor: pointer;
-  }
-  
-  
-  hr {
-    border: 0;
-    height: 2px;
-    margin: 8px 0px;
-    background-color: hsl(0, 0%, 92%);
-  }
-  
-  /* Task area */
-  ul {
-    list-style-type: none;
+}
+
+body {
     margin: 0;
     padding: 0;
-  
-  }
-  
-  ul li {
-    padding: 10px;
+    background-color: #ddd;
+    font-family: var(--font-body);
+    color: var(--c-dark);
+}
+
+/* Control Panel */
+.controls {
+    background: #fff;
+    padding: 20px;
+    border-bottom: 3px solid var(--c-accent);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 100;
+}
+
+@media print {
+    .controls {
+        display: none !important;
+    }
+
+    body {
+        background-color: white !important;
+    }
+
+    @page {
+        size: A4 landscape;
+        margin: 0;
+    }
+}
+
+.controls__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+.controls__group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 200px;
+}
+
+.controls__group--wide {
+    flex: 2;
+}
+
+.controls__group label {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--c-accent);
+}
+
+.controls__group input,
+.controls__group textarea,
+.controls__group select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.controls__group textarea {
+    resize: vertical;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #eee;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    background: var(--c-accent);
+    color: white;
+}
+
+.hint {
+    font-size: 11px;
+    color: #666;
+    margin-top: 5px;
+}
+
+button[type="button"] {
+    background: var(--c-accent);
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="button"]:hover {
+    filter: brightness(1.1);
+}
+
+/* Certificate Layout */
+main {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page {
+    width: 297mm;
+    height: 210mm;
+    background: #fff;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+@media print {
+    main {
+        padding: 0;
+    }
+
+    .page {
+        margin: 0;
+        box-shadow: none;
+    }
+}
+
+.certificate {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 10mm;
+    background-color: var(--c-soft);
+    display: flex;
+    flex-direction: column;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+}
+
+/* Decorative Border */
+.border-container {
+    position: absolute;
+    top: 5mm;
+    left: 5mm;
+    right: 5mm;
+    bottom: 5mm;
+    border: 1.5mm solid var(--c-accent);
+    pointer-events: none;
+}
+
+.inner-border {
+    position: absolute;
+    top: 2mm;
+    left: 2mm;
+    right: 2mm;
+    bottom: 2mm;
+    border: 0.5mm solid var(--c-accent);
+    opacity: 0.5;
+}
+
+.vertical-date {
+    position: absolute;
+    left: -8mm;
+    top: 50%;
+    transform: rotate(-90deg) translateY(-50%);
+    background: var(--c-accent);
+    color: white;
+    padding: 2mm 8mm;
+    font-family: var(--font-header);
+    font-weight: 700;
+    font-size: 10pt;
+    white-space: nowrap;
+}
+
+/* Header Sections */
+.cert-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5mm;
+    position: relative;
+}
+
+.school-code {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 9pt;
+    font-weight: 700;
+    color: var(--c-accent);
+}
+
+.logo-box-top {
+    width: 30mm;
+    height: 30mm;
+    border-radius: 50%;
+    background: #fff;
+    border: 1mm solid var(--c-accent);
     display: flex;
     align-items: center;
-    position: relative;
-  }
-  
-  ul li label {
-    margin-left: 20px;
-  }
-  
-  .but {
-    position: absolute;
-    left: 90%;
-  }
-  
-  ul li:hover {
-    background-color: #f3f3f3;
-  }
-  
-  #list li span i {
-    padding: 1rem;
-    font-size: 1.4rem;
-  }
-  
-  #list li input[type=checkbox] {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-  }
-  
-  .checked {
-    text-decoration: line-through;
-  }
-  
-  /* Task count area */
-  .complete {
-    display: inline;
-    margin: 0;
-  }
-  
-  /* style for task count */
-  #taskCount {
-    width: 0;
-    font-weight: 800;
-    font-size: 1rem;
-    margin-left: 3px;
-  }
-  
-  .complete p {
+    justify-content: center;
+    overflow: hidden;
+}
+
+.logo-box-top img {
+    max-width: 85%;
+    max-height: 85%;
+}
+
+.logo-placeholder {
+    font-weight: 900;
+    color: #ccc;
+    font-size: 8pt;
+}
+
+.school-info-top {
+    flex: 1;
+    text-align: center;
+    margin-right: 30mm;
+    /* offset the absolute code */
+}
+
+.cert-school {
+    font-family: var(--font-header);
+    font-size: var(--s-size);
+    font-weight: 700;
+    color: var(--c-accent);
+}
+
+/* Main Grid */
+.cert-content-grid {
+    display: flex;
+    flex: 1;
+    gap: var(--v-gap);
+    margin-top: 5mm;
+}
+
+.left-col {
+    flex: 0 0 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.photo-box {
+    aspect-ratio: 4/5;
+    background: #fff;
+    border: 2mm double var(--c-accent);
+    outline: 0.5mm solid var(--c-accent);
+    outline-offset: 1mm;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.right-col {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.divider-ornament {
+    font-size: 18pt;
+    color: var(--c-accent);
+    margin: 2mm 0;
+}
+
+.cert-title {
+    font-family: var(--font-header);
+    font-size: 30pt;
+    color: var(--c-accent);
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.divider-line {
+    height: 1mm;
+    background: linear-gradient(90deg, transparent, var(--c-accent), transparent);
+    margin: 3mm 0;
+}
+
+.present-line {
+    font-family: var(--font-script);
+    font-size: 22pt;
+    color: var(--c-dark);
+}
+
+.cert-text-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1mm;
+}
+
+.cert-text-small {
+    font-size: 14pt;
+    color: var(--c-dark);
+}
+
+.class-name-large {
+    font-family: var(--font-header);
+    font-size: 20pt;
+    font-weight: 700;
+    color: var(--c-accent);
+}
+
+.student-name {
+    font-family: var(--font-header);
+    font-size: var(--n-size);
+    font-weight: 900;
+    color: var(--c-name);
+    margin: 2mm 0;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.cert-body-text {
+    font-size: 12pt;
+    line-height: 1.4;
+    color: #444;
+}
+
+.divider-line-bottom {
+    height: 0.5mm;
+    background: #ccc;
+    margin: 5mm auto;
+    width: 80%;
+}
+
+/* Footer & Signatures */
+.cert-footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    margin-bottom: 5mm;
+    min-height: 25mm;
+}
+
+.sign-box {
+    text-align: center;
+    min-width: 60mm;
+}
+
+.sign-line {
+    border-top: 1px solid var(--c-dark);
+    width: 90%;
+    margin: 0 auto 5px;
+}
+
+.sign-name {
+    font-family: var(--font-header);
+    font-size: 12pt;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin-bottom: 2px;
+    min-height: 1.2em;
+}
+
+.sign-role {
+    font-family: var(--font-script);
+    font-size: 18pt;
+    color: #333;
+    line-height: 1;
+}
+
+/* Playful (Kindergarten) Theme */
+.theme-playful {
+    --c-accent: #e74c3c;
+    background: url('playful_background.png') no-repeat center center;
+    background-size: 100% 100%;
+    padding: 15mm !important;
+}
+
+.theme-playful .border-container,
+.theme-playful .inner-border,
+.theme-playful .vertical-date {
+    display: none;
+}
+
+.theme-playful .cert-header-top {
+    flex-direction: column;
+    margin-bottom: 2mm;
+}
+
+.theme-playful .cert-school {
+    font-family: 'Bubblegum Sans', sans-serif;
+    font-size: var(--s-size);
+    background: #48a000;
+    color: #fff !important;
+    padding: 2mm 15mm;
+    border-radius: 50px;
+    box-shadow: 0 5px 0 #2d6500, 0 8px 15px rgba(0, 0, 0, 0.2);
+    text-shadow: 2px 2px 0 #2d6500;
+    margin-bottom: 3mm;
     display: inline-block;
-    margin: 0;
-    width: 50%;
-    text-align: left;
-    font-size: 0.8rem;
-    margin-right: 100px;
-  }
-  
-  .complete span {
-    display: inline-block;
-    width: 12%;
-    text-align: right;
-    cursor: pointer;
-    font-size: 0.85rem;
-  }
-  
-  .complete span:hover,
-  .complete span:visited {
-    color: hsl(206, 5%, 73%);
-  }
-  
-  
-  /* buttons */
-  button {
-    outline: none;
-    border: 0;
-    cursor: pointer;
-    background-color: transparent;
-    text-decoration: none;
-  }
+}
+
+.theme-playful .cert-content-grid {
+    flex-direction: row-reverse;
+    gap: 8mm;
+    margin-top: 1mm;
+}
+
+.theme-playful .left-col {
+    flex: 0 0 35%;
+}
+
+.theme-playful .photo-box {
+    border: 3mm solid #f1c40f;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.theme-playful .student-name {
+    font-family: 'Bubblegum Sans', sans-serif;
+    font-size: var(--n-size);
+    color: #3498db;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+    margin: 3mm 0;
+}
+
+.theme-playful .class-name-large {
+    color: #e67e22;
+    font-size: 18pt;
+}
+
+.theme-playful .divider-line,
+.theme-playful .divider-ornament,
+.theme-playful .divider-line-bottom,
+.theme-playful .present-line,
+.theme-playful .cert-text-small,
+.theme-playful .cert-title,
+.theme-playful .school-code {
+    display: none;
+}
+
+.theme-playful .cert-text-block {
+    gap: 2mm;
+    margin: 4mm 0;
+}
+
+.theme-playful .cert-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10mm;
+}
+
+.theme-playful .sign-role {
+    font-family: var(--font-body);
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+.theme-playful .sign-name {
+    font-family: 'Great Vibes', cursive;
+    font-size: 24pt;
+}
+
+/* Themes */
+.theme-gold {
+    --c-accent: #b8860b;
+}
+
+.theme-red {
+    --c-accent: #a31a1a;
+}
+
+/* AI Dynamic CSS Themes */
+.theme-space {
+    --c-accent: #a29bfe;
+    --c-soft: #1a1a2e;
+    --c-dark: #fff;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    color: #fff !important;
+}
+
+.theme-space .cert-body-text,
+.theme-space .present-line,
+.theme-space .cert-text-small {
+    color: #e0e0e0 !important;
+}
+
+.theme-space .border-container {
+    border-color: #a29bfe;
+    box-shadow: 0 0 15px #6c5ce7;
+}
+
+.theme-space .student-name {
+    text-shadow: 0 0 10px #6c5ce7;
+}
+
+.theme-sea {
+    --c-accent: #00d2ff;
+    --c-soft: #3a7bd5;
+    background: linear-gradient(to bottom, #00d2ff, #3a7bd5);
+    color: #fff !important;
+}
+
+.theme-sea .cert-body-text,
+.theme-sea .present-line,
+.theme-sea .cert-text-small {
+    color: #f0f8ff !important;
+}
+
+.theme-sea .border-container {
+    border-color: #ffffff;
+    border-width: 2mm;
+    border-style: dotted;
+}
+
+.theme-royal {
+    --c-accent: #d4af37;
+    --c-soft: #fff;
+    background: #fff;
+}
+
+.theme-royal .border-container {
+    border: 5mm double #d4af37;
+    outline: 1mm solid #d4af37;
+    outline-offset: 2mm;
+}
+
+.theme-royal .cert-title {
+    font-size: 35pt;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+}
+
+.page-break {
+    page-break-after: always;
+    break-after: page;
+}
