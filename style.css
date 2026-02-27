@@ -1,3 +1,5 @@
+/* CSS for Certificate Generator */
+
 :root {
     --c-accent: #116a4c;
     /* User custom color variable */
@@ -271,20 +273,20 @@ main {
 /* Decorative Border */
 .border-container {
     position: absolute;
-    top: 5mm;
-    left: 5mm;
-    right: 5mm;
-    bottom: 5mm;
+    top: 2mm;
+    left: 2mm;
+    right: 2mm;
+    bottom: 2mm;
     border: 1.5mm solid var(--c-accent);
     pointer-events: none;
 }
 
 .inner-border {
     position: absolute;
-    top: 2mm;
-    left: 2mm;
-    right: 2mm;
-    bottom: 2mm;
+    top: 1mm;
+    left: 1mm;
+    right: 1mm;
+    bottom: 1mm;
     border: 0.5mm solid var(--c-accent);
     opacity: 0.5;
 }
@@ -307,9 +309,11 @@ main {
 .cert-header-top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 5mm;
     position: relative;
+    min-height: 40mm;
+    padding-top: 3mm;
 }
 
 .school-code {
@@ -319,6 +323,7 @@ main {
     font-size: 9pt;
     font-weight: 700;
     color: var(--c-accent);
+    z-index: 10;
 }
 
 .logo-box-top {
@@ -331,6 +336,7 @@ main {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .logo-box-top img {
@@ -347,8 +353,12 @@ main {
 .school-info-top {
     flex: 1;
     text-align: center;
-    margin-right: 30mm;
-    /* offset the absolute code */
+    margin-right: 35mm;
+    margin-left: 5mm;
+    display: flex;
+    flex-direction: column;
+    gap: 1mm;
+    z-index: 5;
 }
 
 .cert-school {
@@ -356,6 +366,38 @@ main {
     font-size: var(--s-size);
     font-weight: 700;
     color: var(--c-accent);
+    text-transform: uppercase;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.cert-address {
+    font-family: var(--font-header);
+    font-size: calc(var(--s-size) - 6pt);
+    font-weight: 500;
+    color: var(--c-accent);
+    opacity: 0.85;
+    line-height: 1.3;
+}
+
+.cert-foundation {
+    font-family: var(--font-header);
+    font-size: calc(var(--s-size) - 7pt);
+    font-weight: 500;
+    color: var(--c-accent);
+    opacity: 0.8;
+    font-style: italic;
+    line-height: 1.3;
+}
+
+.cert-session {
+    font-family: var(--font-header);
+    font-size: var(--session-size, calc(var(--s-size) - 4pt));
+    font-weight: 600;
+    color: var(--c-accent);
+    margin-top: 2mm;
+    opacity: 0.9;
+    line-height: 1.2;
 }
 
 /* Main Grid */
@@ -471,7 +513,7 @@ main {
     justify-content: space-around;
     align-items: flex-end;
     margin-bottom: 5mm;
-    min-height: 25mm;
+    min-height: 22mm;
 }
 
 .sign-box {
@@ -517,7 +559,22 @@ main {
 
 .theme-playful .cert-header-top {
     flex-direction: column;
-    margin-bottom: 2mm;
+    align-items: center;
+    margin-bottom: 5mm;
+    gap: 0;
+    position: relative;
+}
+
+.theme-playful .logo-box-top {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 3mm;
+}
+
+.theme-playful .school-info-top {
+    margin: 0;
+    text-align: center;
+    width: 100%;
 }
 
 .theme-playful .cert-school {
@@ -529,7 +586,7 @@ main {
     border-radius: 50px;
     box-shadow: 0 5px 0 #2d6500, 0 8px 15px rgba(0, 0, 0, 0.2);
     text-shadow: 2px 2px 0 #2d6500;
-    margin-bottom: 3mm;
+    margin: 0 auto;
     display: inline-block;
 }
 
@@ -567,8 +624,7 @@ main {
 .theme-playful .divider-line-bottom,
 .theme-playful .present-line,
 .theme-playful .cert-text-small,
-.theme-playful .cert-title,
-.theme-playful .school-code {
+.theme-playful .cert-title {
     display: none;
 }
 
@@ -592,6 +648,16 @@ main {
 .theme-playful .sign-name {
     font-family: 'Great Vibes', cursive;
     font-size: 24pt;
+}
+
+.theme-playful .school-code {
+    font-family: 'Bubblegum Sans', sans-serif;
+    font-size: 10pt;
+    color: #e67e22;
+    font-weight: bold;
+    position: absolute;
+    top: -5mm;
+    right: 5mm;
 }
 
 /* Themes */
@@ -664,7 +730,932 @@ main {
     letter-spacing: 5px;
 }
 
+/* Modern Minimalist Theme */
+.theme-modern {
+    --c-accent: #2c3e50;
+    --c-soft: #ecf0f1;
+    background: linear-gradient(to bottom, #ffffff 0%, #ecf0f1 100%);
+}
+
+.theme-modern .border-container {
+    border: none;
+    border-left: 8mm solid #2c3e50;
+}
+
+.theme-modern .inner-border {
+    display: none;
+}
+
+.theme-modern .cert-title {
+    font-size: 32pt;
+    font-weight: 300;
+    letter-spacing: 3px;
+    border-bottom: 2px solid #2c3e50;
+    padding-bottom: 3mm;
+}
+
+.theme-modern .student-name {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* Elegant Purple Theme */
+.theme-elegant {
+    --c-accent: #8e44ad;
+    --c-soft: #f8f3ff;
+    background: radial-gradient(circle at top right, #f8f3ff, #ffffff);
+}
+
+.theme-elegant .border-container {
+    border: 2mm solid #8e44ad;
+    border-radius: 10mm;
+}
+
+.theme-elegant .inner-border {
+    border: 1mm solid #c39bd3;
+    border-radius: 8mm;
+}
+
+.theme-elegant .cert-title {
+    color: #8e44ad;
+    font-family: 'Great Vibes', cursive;
+    font-size: 40pt;
+    font-weight: normal;
+}
+
+.theme-elegant .student-name {
+    color: #6c3483;
+    font-style: italic;
+}
+
+.theme-elegant .divider-ornament {
+    color: #8e44ad;
+    font-size: 20pt;
+}
+
+/* Nature Green Theme */
+.theme-nature {
+    --c-accent: #27ae60;
+    --c-soft: #e8f8f5;
+    background: linear-gradient(135deg, #e8f8f5 0%, #d5f4e6 50%, #e8f8f5 100%);
+}
+
+.theme-nature .border-container {
+    border: 3mm solid #27ae60;
+    border-radius: 5mm;
+    box-shadow: inset 0 0 0 2mm #a9dfbf;
+}
+
+.theme-nature .inner-border {
+    border: 1mm dashed #52be80;
+}
+
+.theme-nature .cert-title {
+    color: #1e8449;
+    text-shadow: 1px 1px 2px rgba(39, 174, 96, 0.3);
+}
+
+.theme-nature .student-name {
+    color: #27ae60;
+    font-weight: 700;
+}
+
+.theme-nature .logo-box-top {
+    border-color: #27ae60;
+    background: #d5f4e6;
+}
+
+/* Sunset Orange Theme */
+.theme-sunset {
+    --c-accent: #e67e22;
+    --c-soft: #fff5e6;
+    background: linear-gradient(to bottom, #fff5e6 0%, #ffe6cc 50%, #ffd9b3 100%);
+}
+
+.theme-sunset .border-container {
+    border: 4mm solid #e67e22;
+    border-image: linear-gradient(45deg, #e67e22, #f39c12, #e67e22) 1;
+}
+
+.theme-sunset .inner-border {
+    border: 1mm solid #f39c12;
+    opacity: 0.7;
+}
+
+.theme-sunset .cert-title {
+    color: #d35400;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.theme-sunset .student-name {
+    color: #e67e22;
+    text-shadow: 1px 1px 0 rgba(230, 126, 34, 0.2);
+}
+
+.theme-sunset .divider-line {
+    background: linear-gradient(to right, transparent, #e67e22, transparent);
+    height: 2px;
+}
+
+/* Professional Blue Theme */
+.theme-professional {
+    --c-accent: #2980b9;
+    --c-soft: #ebf5fb;
+    background: #ffffff;
+}
+
+.theme-professional .border-container {
+    border: 3mm solid #2980b9;
+    box-shadow: 0 0 0 1mm #5dade2;
+}
+
+.theme-professional .inner-border {
+    border: 0.5mm solid #5dade2;
+}
+
+.theme-professional .cert-header-top {
+    background: linear-gradient(to right, #2980b9, #3498db);
+    padding: 5mm;
+    margin: -10mm -10mm 5mm -10mm;
+}
+
+.theme-professional .cert-school {
+    color: #ffffff !important;
+    font-size: calc(var(--s-size) + 2pt);
+}
+
+.theme-professional .school-code {
+    color: #ffffff;
+}
+
+.theme-professional .logo-box-top {
+    border-color: #ffffff;
+    background: #ffffff;
+}
+
+.theme-professional .cert-title {
+    color: #2980b9;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.theme-professional .student-name {
+    color: #1f618d;
+    font-weight: 600;
+}
+
 .page-break {
     page-break-after: always;
     break-after: page;
 }
+
+
+/* Rainbow Kids Theme - UKG */
+.theme-rainbow {
+    --c-accent: #ff6b6b;
+    --c-soft: #fff;
+    background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 25%, #fd79a8 50%, #a29bfe 75%, #74b9ff 100%) !important;
+    padding: 12mm !important;
+}
+
+.theme-rainbow .border-container {
+    display: none;
+}
+
+.theme-rainbow .inner-border {
+    display: none;
+}
+
+.theme-rainbow .cert-header-top {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5mm;
+    gap: 3mm;
+}
+
+.theme-rainbow .logo-box-top {
+    border: 4mm solid #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.theme-rainbow .cert-school {
+    font-family: 'Bubblegum Sans', sans-serif;
+    background: #fff;
+    color: #ff6b6b !important;
+    padding: 3mm 20mm;
+    border-radius: 50px;
+    font-size: calc(var(--s-size) + 2pt);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.theme-rainbow .cert-content-grid {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8mm;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.theme-rainbow .student-name {
+    font-family: 'Bubblegum Sans', sans-serif;
+    color: #ff6b6b;
+    font-size: calc(var(--n-size) + 4pt);
+    text-shadow: 2px 2px 0 rgba(255, 107, 107, 0.2);
+}
+
+.theme-rainbow .divider-line,
+.theme-rainbow .divider-ornament,
+.theme-rainbow .cert-title {
+    display: none;
+}
+
+/* Cartoon Fun Theme - UKG */
+.theme-cartoon {
+    --c-accent: #feca57;
+    --c-soft: #fff;
+    background: #48dbfb !important;
+    padding: 12mm !important;
+}
+
+.theme-cartoon .border-container {
+    border: 5mm solid #feca57;
+    border-radius: 15mm;
+    box-shadow: 0 0 0 3mm #ff9ff3;
+}
+
+.theme-cartoon .inner-border {
+    display: none;
+}
+
+.theme-cartoon .cert-header-top {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5mm;
+    gap: 3mm;
+}
+
+.theme-cartoon .logo-box-top {
+    border: 4mm solid #feca57;
+    background: #fff;
+    transform: rotate(-5deg);
+}
+
+.theme-cartoon .cert-school {
+    font-family: 'Bubblegum Sans', sans-serif;
+    background: #feca57;
+    color: #2d3436 !important;
+    padding: 3mm 15mm;
+    border-radius: 20px;
+    font-size: calc(var(--s-size) + 2pt);
+    box-shadow: 5px 5px 0 #ff9ff3;
+    transform: rotate(2deg);
+    text-align: center;
+}
+
+.theme-cartoon .cert-content-grid {
+    background: #fff;
+    padding: 8mm;
+    border-radius: 15px;
+    border: 3mm solid #feca57;
+}
+
+.theme-cartoon .photo-box {
+    border: 4mm solid #ff9ff3;
+    border-radius: 20px;
+    transform: rotate(-3deg);
+}
+
+.theme-cartoon .student-name {
+    font-family: 'Bubblegum Sans', sans-serif;
+    color: #ee5a6f;
+    font-size: calc(var(--n-size) + 4pt);
+}
+
+.theme-cartoon .divider-line,
+.theme-cartoon .divider-ornament,
+.theme-cartoon .cert-title {
+    display: none;
+}
+
+/* Starry Kids Theme - UKG */
+.theme-stars {
+    --c-accent: #ffd93d;
+    --c-soft: #1e3a8a;
+    background: radial-gradient(circle at 20% 30%, #1e3a8a, #0f172a) !important;
+    color: #fff !important;
+    padding: 12mm !important;
+}
+
+.theme-stars .border-container {
+    border: 3mm solid #ffd93d;
+    box-shadow: 0 0 20px #ffd93d, inset 0 0 20px rgba(255, 217, 61, 0.3);
+}
+
+.theme-stars .inner-border {
+    border: 1mm dotted #fff;
+}
+
+.theme-stars .cert-header-top {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5mm;
+    gap: 3mm;
+}
+
+.theme-stars .logo-box-top {
+    border: 3mm solid #ffd93d;
+    background: #fff;
+    box-shadow: 0 0 15px #ffd93d;
+}
+
+.theme-stars .cert-school {
+    font-family: 'Bubblegum Sans', sans-serif;
+    background: #ffd93d;
+    color: #1e3a8a !important;
+    padding: 3mm 20mm;
+    border-radius: 50px;
+    font-size: calc(var(--s-size) + 2pt);
+    box-shadow: 0 5px 20px rgba(255, 217, 61, 0.5);
+    text-align: center;
+}
+
+.theme-stars .school-code {
+    color: #ffd93d;
+}
+
+.theme-stars .cert-content-grid {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8mm;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.theme-stars .student-name {
+    font-family: 'Bubblegum Sans', sans-serif;
+    color: #ffd93d;
+    font-size: calc(var(--n-size) + 4pt);
+    text-shadow: 0 0 10px #ffd93d;
+}
+
+.theme-stars .cert-body-text,
+.theme-stars .present-line,
+.theme-stars .cert-text-small,
+.theme-stars .class-name-large {
+    color: #fff !important;
+}
+
+.theme-stars .divider-line,
+.theme-stars .divider-ornament,
+.theme-stars .cert-title {
+    display: none;
+}
+
+/* Animal Friends Theme - UKG */
+.theme-animals {
+    --c-accent: #38ada9;
+    --c-soft: #fffacd;
+    background: linear-gradient(to bottom, #b8e994 0%, #78e08f 100%) !important;
+    padding: 12mm !important;
+}
+
+.theme-animals .border-container {
+    border: 4mm solid #38ada9;
+    border-radius: 10mm;
+}
+
+.theme-animals .inner-border {
+    border: 2mm dashed #079992;
+}
+
+.theme-animals .cert-header-top {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5mm;
+    gap: 3mm;
+}
+
+.theme-animals .logo-box-top {
+    border: 4mm solid #38ada9;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.theme-animals .cert-school {
+    font-family: 'Bubblegum Sans', sans-serif;
+    background: #38ada9;
+    color: #fff !important;
+    padding: 3mm 20mm;
+    border-radius: 30px;
+    font-size: calc(var(--s-size) + 2pt);
+    box-shadow: 0 5px 0 #079992, 0 8px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.theme-animals .cert-content-grid {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 8mm;
+    border-radius: 15px;
+    border: 3mm solid #fff;
+}
+
+.theme-animals .photo-box {
+    border: 4mm solid #38ada9;
+    border-radius: 50%;
+}
+
+.theme-animals .student-name {
+    font-family: 'Bubblegum Sans', sans-serif;
+    color: #079992;
+    font-size: calc(var(--n-size) + 4pt);
+}
+
+.theme-animals .class-name-large {
+    color: #38ada9;
+}
+
+.theme-animals .divider-line,
+.theme-animals .divider-ornament,
+.theme-animals .cert-title {
+    display: none;
+}
+
+/* Fix overlapping for all themes - ensure proper header spacing */
+.cert-header-top {
+    min-height: 45mm;
+    position: relative;
+}
+
+.school-info-top {
+    z-index: 2;
+}
+
+.logo-box-top {
+    z-index: 3;
+}
+
+.school-code {
+    z-index: 4;
+}
+
+
+/* Superhero Theme - Cartoon */
+.theme-superhero {
+    --c-accent: #e74c3c;
+    --c-soft: #fff;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%) !important;
+    padding: 12mm !important;
+}
+
+.theme-superhero .border-container {
+    border: 5mm solid #feca57;
+    border-radius: 10mm;
+    box-shadow: 0 0 0 2mm #000, 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.theme-superhero .inner-border {
+    border: 2mm solid #000;
+}
+
+.theme-superhero .cert-header-top {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5mm;
+    gap: 3mm;
+}
+
+.theme-superhero .logo-box-top {
+    border: 4mm solid #feca57;
+    background: #fff;
+    box-shadow: 5px 5px 0 #000;
+}
+
+.theme-superhero .cert-school {
+    font-family: 'Bubblegum Sans', sans-serif;
+    background: #feca57;
+    color: #000 !important;
+    padding: 3mm 20mm;
+    border-radius: 10px;
+    font-size: calc(var(--s-size) + 4pt);
+    box-shadow: 5px 5px 0 #000;
+    text-align: center;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.theme-superhero .cert-content-grid {
+    background: #fff;
+    padding: 8mm;
+    border-radius: 15px;
+    border: 4mm solid #000;
+    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+.theme-superhero .student-name {
+    font-family: 'Bubblegum Sans', sans-serif;
+    color: #e74c3c;
+    font-size: calc(var(--n-size) + 6pt);
+    text-transform: uppercase;
+    font-weight: 900;
+}
+
+.theme-superhero .photo-box {
+    border: 4mm solid #feca57;
+    box-shadow: 5px 5px 0 #000;
+}
+
+.theme-superhero .divider-line,
+.theme-superhero .divider-ornament,
+.theme-superhero .cert-title {
+    display: none;
+}
+
+/* Princess Castle Theme - Cartoon */
+.theme-princess {
+    --c-accent: #ff9ff3;
+    --c-soft: #fff;
+    background: linear-gradient(to bottom, #ffeef8 0%, #ffd6f3 50%, #ffb8e6 100%) !important;
+    padding: 12mm !important;
+}
+
+.theme-princess .border-container {
+    border: 4mm solid #ff9ff3;
+    border-radius: 15mm;
+    box-shadow: 0 0 20px rgba(255, 159, 243, 0.5);
+}
+
+.theme-princess .inner-border {
+    border: 2mm dotted #feca57;
+}
+
+.theme-princess .cert-header-top {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5mm;
+    gap: 3mm;
+}
+
+.theme-princess .logo-box-top {
+    border: 4mm solid #ff9ff3;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 5px 20px rgba(255, 159, 243, 0.4);
+}
+
+.theme-princess .cert-school {
+    font-family: 'Great Vibes', cursive;
+    background: linear-gradient(to right, #ff9ff3, #feca57);
+    color: #fff !important;
+    padding: 3mm 20mm;
+    border-radius: 50px;
+    font-size: calc(var(--s-size) + 4pt);
+    box-shadow: 0 5px 15px rgba(255, 159, 243, 0.5);
+    text-align: center;
+}
+
+.theme-princess .cert-content-grid {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8mm;
+    border-radius: 20px;
+    border: 3mm solid #ff9ff3;
+}
+
+.theme-princess .student-name {
+    font-family: 'Great Vibes', cursive;
+    color: #ff6b9d;
+    font-size: calc(var(--n-size) + 6pt);
+}
+
+.theme-princess .photo-box {
+    border: 4mm solid #ff9ff3;
+    border-radius: 50%;
+}
+
+.theme-princess .divider-line,
+.theme-princess .divider-ornament,
+.theme-princess .cert-title {
+    display: none;
+}
+
+/* Dinosaur World Theme - Cartoon */
+.theme-dinosaur {
+    --c-accent: #6ab04c;
+    --c-soft: #fff;
+    background: linear-gradient(to bottom, #badc58 0%, #6ab04c 100%) !important;
+    padding: 12mm !important;
+}
+
+.theme-dinosaur .border-container {
+    border: 5mm solid #4a7c59;
+    border-radius: 10mm;
+}
+
+.theme-dinosaur .inner-border {
+    border: 2mm dashed #f9ca24;
+}
+
+.theme-dinosaur .cert-header-top {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5mm;
+    gap: 3mm;
+}
+
+.theme-dinosaur .logo-box-top {
+    border: 4mm solid #4a7c59;
+    background: #fff;
+    transform: rotate(-5deg);
+}
+
+.theme-dinosaur .cert-school {
+    font-family: 'Bubblegum Sans', sans-serif;
+    background: #4a7c59;
+    color: #f9ca24 !important;
+    padding: 3mm 20mm;
+    border-radius: 15px;
+    font-size: calc(var(--s-size) + 3pt);
+    box-shadow: 5px 5px 0 #2d5016;
+    text-align: center;
+    font-weight: 900;
+}
+
+.theme-dinosaur .cert-content-grid {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8mm;
+    border-radius: 15px;
+    border: 4mm solid #4a7c59;
+}
+
+.theme-dinosaur .student-name {
+    font-family: 'Bubblegum Sans', sans-serif;
+    color: #4a7c59;
+    font-size: calc(var(--n-size) + 5pt);
+    font-weight: 900;
+}
+
+.theme-dinosaur .photo-box {
+    border: 4mm solid #f9ca24;
+    border-radius: 15px;
+    transform: rotate(3deg);
+}
+
+.theme-dinosaur .divider-line,
+.theme-dinosaur .divider-ornament,
+.theme-dinosaur .cert-title {
+    display: none;
+}
+
+/* Underwater Adventure Theme - Cartoon */
+.theme-underwater {
+    --c-accent: #00d2ff;
+    --c-soft: #fff;
+    background: linear-gradient(to bottom, #48dbfb 0%, #0abde3 50%, #00a8cc 100%) !important;
+    padding: 12mm !important;
+}
+
+.theme-underwater .border-container {
+    border: 4mm solid #00d2ff;
+    border-radius: 20mm;
+    box-shadow: 0 0 30px rgba(0, 210, 255, 0.5);
+}
+
+.theme-underwater .inner-border {
+    border: 2mm wavy #feca57;
+}
+
+.theme-underwater .cert-header-top {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5mm;
+    gap: 3mm;
+}
+
+.theme-underwater .logo-box-top {
+    border: 4mm solid #00d2ff;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.6);
+}
+
+.theme-underwater .cert-school {
+    font-family: 'Bubblegum Sans', sans-serif;
+    background: #fff;
+    color: #0abde3 !important;
+    padding: 3mm 20mm;
+    border-radius: 50px;
+    font-size: calc(var(--s-size) + 3pt);
+    box-shadow: 0 5px 20px rgba(0, 210, 255, 0.4);
+    text-align: center;
+    border: 3mm solid #00d2ff;
+}
+
+.theme-underwater .cert-content-grid {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 8mm;
+    border-radius: 25px;
+    border: 3mm solid #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.theme-underwater .student-name {
+    font-family: 'Bubblegum Sans', sans-serif;
+    color: #0abde3;
+    font-size: calc(var(--n-size) + 5pt);
+}
+
+.theme-underwater .photo-box {
+    border: 4mm solid #00d2ff;
+    border-radius: 50%;
+}
+
+.theme-underwater .divider-line,
+.theme-underwater .divider-ornament,
+.theme-underwater .cert-title {
+    display: none;
+}
+
+/* Circus Fun Theme - Cartoon */
+.theme-circus {
+    --c-accent: #e74c3c;
+    --c-soft: #fff;
+    background: repeating-linear-gradient(
+        45deg,
+        #feca57,
+        #feca57 20px,
+        #fff 20px,
+        #fff 40px,
+        #e74c3c 40px,
+        #e74c3c 60px,
+        #fff 60px,
+        #fff 80px
+    ) !important;
+    padding: 12mm !important;
+}
+
+.theme-circus .border-container {
+    border: 6mm solid #e74c3c;
+    border-radius: 10mm;
+    box-shadow: 0 0 0 3mm #feca57, 0 0 0 6mm #000;
+}
+
+.theme-circus .inner-border {
+    display: none;
+}
+
+.theme-circus .cert-header-top {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5mm;
+    gap: 3mm;
+}
+
+.theme-circus .logo-box-top {
+    border: 5mm solid #e74c3c;
+    background: #feca57;
+    box-shadow: 5px 5px 0 #000;
+}
+
+.theme-circus .cert-school {
+    font-family: 'Bubblegum Sans', sans-serif;
+    background: #e74c3c;
+    color: #feca57 !important;
+    padding: 3mm 20mm;
+    border-radius: 10px;
+    font-size: calc(var(--s-size) + 4pt);
+    box-shadow: 5px 5px 0 #000;
+    text-align: center;
+    font-weight: 900;
+    text-transform: uppercase;
+    border: 3mm solid #000;
+}
+
+.theme-circus .cert-content-grid {
+    background: #fff;
+    padding: 8mm;
+    border-radius: 15px;
+    border: 5mm solid #000;
+    box-shadow: 8px 8px 0 #feca57;
+}
+
+.theme-circus .student-name {
+    font-family: 'Bubblegum Sans', sans-serif;
+    color: #e74c3c;
+    font-size: calc(var(--n-size) + 6pt);
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.theme-circus .photo-box {
+    border: 5mm solid #feca57;
+    box-shadow: 5px 5px 0 #000;
+}
+
+.theme-circus .divider-line,
+.theme-circus .divider-ornament,
+.theme-circus .cert-title {
+    display: none;
+}
+
+/* Watermark Styles */
+.watermark {
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+    user-select: none;
+}
+
+.watermark.position-center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.watermark.position-diagonal {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.watermark.position-top-right {
+    top: 20px;
+    right: 20px;
+}
+
+.watermark.position-bottom-right {
+    bottom: 20px;
+    right: 20px;
+}
+
+.watermark img {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: contain;
+}
+
+.watermark.text-watermark {
+    font-size: 48px;
+    font-weight: bold;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
+
+
+/* ===== GLOBAL FIX - SCHOOL NAME ON ONE LINE ===== */
+.certificate .cert-school {
+    white-space: nowrap !important;
+    overflow: visible !important;
+}
+
+/* Ensure school info container can accommodate long names */
+.certificate .school-info-top {
+    overflow: visible !important;
+    min-width: 0 !important;
+}
+
+
+/* ===== SIGNATURE ALIGNMENT FIX - KEEP ON SAME LINE ===== */
+
+/* Ensure signatures stay on same horizontal line */
+.certificate .cert-footer {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: flex-end !important;
+    flex-wrap: nowrap !important;
+    gap: 15mm !important;
+    width: 100% !important;
+    padding: 0 10mm !important;
+}
+
+.certificate .sign-box {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    max-width: 45% !important;
+    text-align: center !important;
+    display: inline-block !important;
+}
+
+/* Ensure sign elements don't wrap */
+.certificate .sign-name,
+.certificate .sign-role {
+    white-space: nowrap !important;
+    overflow: visible !important;
+    display: block !important;
+}
+
+/* Align signature lines at same height */
+.certificate .sign-line {
+    width: 90% !important;
+    margin: 0 auto 3mm !important;
+    border-top: 1.5px solid var(--c-dark) !important;
+    display: block !important;
+}
+
+/* Override any theme-specific footer styles */
+.certificate[class*="theme-"] .cert-footer {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+}
+
