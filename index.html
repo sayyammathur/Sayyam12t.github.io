@@ -12,10 +12,34 @@
         rel="stylesheet">
     <!-- SheetJS for Excel Parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
+    <!-- Canva-Style Floating Toolbar (Hidden by default) -->
+    <div id="canvaToolbar" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 12px 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; border: 2px solid #667eea;">
+        <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <label style="font-size: 11px; font-weight: bold; color: #667eea;">Font Size:</label>
+                <input id="canvaFontSize" type="number" min="8" max="60" value="12" style="width: 60px; padding: 4px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <label style="font-size: 11px; font-weight: bold; color: #667eea;">Color:</label>
+                <input id="canvaColor" type="color" value="#000000" style="width: 40px; height: 30px; border: none; cursor: pointer;">
+            </div>
+            <div style="display: flex; gap: 5px;">
+                <button id="canvaBold" type="button" style="padding: 6px 10px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; font-weight: bold;">B</button>
+                <button id="canvaItalic" type="button" style="padding: 6px 10px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; font-style: italic;">I</button>
+            </div>
+            <div style="border-left: 2px solid #ddd; height: 30px;"></div>
+            <button id="canvaSave" type="button" style="padding: 6px 16px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">✓ Save</button>
+            <button id="canvaCancel" type="button" style="padding: 6px 16px; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">✕ Cancel</button>
+        </div>
+    </div>
+
     <!-- Controls (hidden in print) -->
     <section class="controls" aria-label="Certificate Controls">
 
@@ -55,13 +79,23 @@
                 <input id="schoolName" type="text" value="DELHI WORLD PUBLIC SCHOOL, ASHTA" />
             </div>
             <div class="controls__group">
+                <label>School Address</label>
+                <input id="schoolAddress" type="text" value="Shujalpur Road, Ashta, Madhya Pradesh" />
+            </div>
+            <div class="controls__group">
+                <label>School Foundation/Aegis</label>
+                <input id="schoolFoundation" type="text" value="(Under the aegis of Delhi World Foundation)" />
+            </div>
+            <div class="controls__group">
                 <label>School Code / Affiliation</label>
-                <input id="schoolCode" type="text" value="Affiliation No: XXXXXX" />
+                <input id="schoolCode" type="text" value="CBSE Affiliation : 1031107" />
             </div>
             <div class="controls__group">
                 <label>Certificate Title</label>
                 <input id="certTitle" type="text" value="Graduation Certificate" />
             </div>
+        </div>
+        <div class="controls__row">
             <div class="controls__group">
                 <label>Session</label>
                 <input id="session" type="text" value="SESSION 2025–26" />
@@ -70,8 +104,6 @@
                 <label>Issue Date</label>
                 <input id="issueDate" type="text" value="20-Feb-2026" />
             </div>
-        </div>
-        <div class="controls__row">
             <div class="controls__group">
                 <label>Principal Name</label>
                 <input id="principalName" type="text" value="Dr. Sangeeta Sinha" />
@@ -104,6 +136,20 @@
                     <option value="space">Space Odyssey</option>
                     <option value="sea">Deep Sea</option>
                     <option value="royal">Classic Double Gold</option>
+                    <option value="modern">Modern Minimalist</option>
+                    <option value="elegant">Elegant Purple</option>
+                    <option value="nature">Nature Green</option>
+                    <option value="sunset">Sunset Orange</option>
+                    <option value="professional">Professional Blue</option>
+                    <option value="rainbow">Rainbow Kids</option>
+                    <option value="cartoon">Cartoon Fun</option>
+                    <option value="stars">Starry Kids</option>
+                    <option value="animals">Animal Friends</option>
+                    <option value="superhero">Superhero</option>
+                    <option value="princess">Princess Castle</option>
+                    <option value="dinosaur">Dinosaur World</option>
+                    <option value="underwater">Underwater Adventure</option>
+                    <option value="circus">Circus Fun</option>
                 </select>
             </div>
             <div class="controls__group">
@@ -165,6 +211,22 @@
                             style="background: #6c5ce7; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-top: 15px;">Generate
                             Message</button>
                     </div>
+                    
+                    <!-- Gemini AI Integration -->
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #d0d0ff;">
+                        <label style="font-size: 11px; font-weight: bold; color: #6c5ce7;">🤖 Gemini AI - Custom Text Generator</label>
+                        <div style="display: flex; gap: 10px; margin-top: 5px; align-items: flex-end;">
+                            <div style="flex: 1;">
+                                <input id="geminiPrompt" type="text" placeholder="E.g., 'Write a certificate for best student in science'" 
+                                    style="width: 100%; padding: 8px; border: 1px solid #d0d0ff; border-radius: 4px; font-size: 12px;">
+                            </div>
+                            <button id="btnGeminiGenerate" type="button"
+                                style="background: linear-gradient(45deg, #4285f4, #34a853); color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; white-space: nowrap;">
+                                ✨ Generate with Gemini
+                            </button>
+                        </div>
+                        <div id="geminiStatus" style="font-size: 10px; color: #666; margin-top: 5px; min-height: 15px;"></div>
+                    </div>
                 </div>
             </div>
             <div class="controls__group">
@@ -221,18 +283,149 @@
                 <span style="font-size: 11px; font-weight: bold;">Royal Gold</span>
             </div>
 
+            <!-- New UKG Themes -->
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#ff6b6b', 'row-reverse', 'rainbow', 'kids')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: linear-gradient(135deg, #ffeaa7, #fab1a0, #fd79a8, #a29bfe, #74b9ff); border-radius: 4px; border: 2px solid #ddd; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
+                    🌈</div>
+                <span style="font-size: 11px; font-weight: bold;">Rainbow Kids</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#feca57', 'row-reverse', 'cartoon', 'kids')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: #48dbfb; border-radius: 4px; border: 2px solid #feca57; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
+                    🎨</div>
+                <span style="font-size: 11px; font-weight: bold;">Cartoon Fun</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#ffd93d', 'row', 'stars', 'kids')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: radial-gradient(circle, #1e3a8a, #0f172a); border-radius: 4px; border: 2px solid #ffd93d; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: #ffd93d; font-size: 20px;">
+                    ⭐</div>
+                <span style="font-size: 11px; font-weight: bold;">Starry Kids</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#38ada9', 'row-reverse', 'animals', 'kids')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: linear-gradient(to bottom, #b8e994, #78e08f); border-radius: 4px; border: 2px solid #38ada9; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
+                    🐾</div>
+                <span style="font-size: 11px; font-weight: bold;">Animal Friends</span>
+            </div>
+
+            <!-- Professional Themes -->
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#2c3e50', 'row', 'modern', 'sans')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: linear-gradient(to bottom, #ffffff, #ecf0f1); border-left: 8px solid #2c3e50; border-radius: 4px; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: #2c3e50; font-size: 20px;">
+                    📋</div>
+                <span style="font-size: 11px; font-weight: bold;">Modern</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#8e44ad', 'row', 'elegant', 'script')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: radial-gradient(circle at top right, #f8f3ff, #ffffff); border: 2px solid #8e44ad; border-radius: 10px; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: #8e44ad; font-size: 20px;">
+                    💜</div>
+                <span style="font-size: 11px; font-weight: bold;">Elegant Purple</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#27ae60', 'row-reverse', 'nature', 'sans')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: linear-gradient(135deg, #e8f8f5, #d5f4e6); border: 3px solid #27ae60; border-radius: 5px; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: #27ae60; font-size: 20px;">
+                    🌿</div>
+                <span style="font-size: 11px; font-weight: bold;">Nature Green</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#e67e22', 'row', 'sunset', 'bold')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: linear-gradient(to bottom, #fff5e6, #ffe6cc, #ffd9b3); border: 4px solid #e67e22; border-radius: 4px; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: #e67e22; font-size: 20px;">
+                    🌅</div>
+                <span style="font-size: 11px; font-weight: bold;">Sunset Orange</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#2980b9', 'row', 'professional', 'sans')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: linear-gradient(to right, #2980b9, #3498db); border: 3px solid #2980b9; border-radius: 4px; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
+                    💼</div>
+                <span style="font-size: 11px; font-weight: bold;">Professional</span>
+            </div>
+
+            <!-- More Cartoon Themes -->
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#e74c3c', 'row-reverse', 'superhero', 'kids')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: linear-gradient(135deg, #ff6b6b, #ee5a6f, #c44569); border: 4px solid #feca57; border-radius: 10px; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: 900;">
+                    🦸</div>
+                <span style="font-size: 11px; font-weight: bold;">Superhero</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#ff9ff3', 'row', 'princess', 'script')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: linear-gradient(to bottom, #ffeef8, #ffd6f3, #ffb8e6); border: 4px solid #ff9ff3; border-radius: 15px; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: #ff6b9d; font-size: 24px;">
+                    👑</div>
+                <span style="font-size: 11px; font-weight: bold;">Princess</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#6ab04c', 'row-reverse', 'dinosaur', 'kids')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: linear-gradient(to bottom, #badc58, #6ab04c); border: 4px solid #4a7c59; border-radius: 10px; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                    🦕</div>
+                <span style="font-size: 11px; font-weight: bold;">Dinosaur</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#00d2ff', 'row', 'underwater', 'kids')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: linear-gradient(to bottom, #48dbfb, #0abde3, #00a8cc); border: 4px solid #00d2ff; border-radius: 20px; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                    🐠</div>
+                <span style="font-size: 11px; font-weight: bold;">Underwater</span>
+            </div>
+            <div class="ai-theme-item" onclick="applyAiTheme('none', '#e74c3c', 'row-reverse', 'circus', 'kids')"
+                style="cursor: pointer; text-align: center; flex-shrink: 0;">
+                <div
+                    style="width: 100px; height: 70px; background: repeating-linear-gradient(45deg, #feca57, #feca57 10px, #e74c3c 10px, #e74c3c 20px); border: 4px solid #000; border-radius: 10px; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: 900;">
+                    🎪</div>
+                <span style="font-size: 11px; font-weight: bold;">Circus</span>
+            </div>
+
             <div style="flex: 1; display: flex; align-items: center; justify-content: center; color: #999;">
                 <p style="font-size: 12px; font-style: italic;">Tap a theme to instantly apply its design ✨</p>
             </div>
         </div>
 
         <!-- 3. DESIGN CUSTOMIZATION (Canva-like) -->
-        <h3 style="margin-top:20px; border-bottom:2px solid #ddd; padding-bottom:10px; color:var(--c-accent);">3. Design
-            Customization (Canva Style)</h3>
-        <div class="controls__row" style="background:#f9f9f9; padding:10px; border-radius:8px;">
+        <h3 style="margin-top:20px; border-bottom:2px solid #ddd; padding-bottom:10px; color:var(--c-accent); display: flex; justify-content: space-between; align-items: center;">
+            <span>3. Design Customization (Canva Style)</span>
+            <button id="toggleCanvaMode" type="button"
+                style="font-size: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 6px 16px; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);">
+                🎨 Enable Click-to-Edit Mode
+            </button>
+        </h3>
+        
+        <!-- Canva Mode Instructions -->
+        <div id="canvaModeInstructions" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 12px; border-radius: 8px; margin-bottom: 15px; color: white; animation: slideDown 0.3s ease;">
+            <div style="font-weight: bold; margin-bottom: 5px; font-size: 13px;">✨ Click-to-Edit Mode Active!</div>
+            <div style="font-size: 11px; line-height: 1.6; opacity: 0.95;">
+                • Click on any text in the certificate to edit it directly<br>
+                • Click on colors to change them with a color picker<br>
+                • Use the toolbar that appears to adjust font size and style<br>
+                • Click "Save Changes" when done or "Cancel" to discard
+            </div>
+        </div>
+        
+        <div class="controls__row" style="background:#f9f9f9; padding:10px; border-radius:8px;"></div>
             <div class="controls__group">
                 <label>Custom BG Image</label>
                 <input id="customBgUpload" type="file" accept="image/*" />
+                <div style="margin-top: 8px; padding: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 6px;">
+                    <label style="font-size: 11px; font-weight: bold; color: white; display: block; margin-bottom: 5px;">🎨 AI Background Generator (Gemini Powered)</label>
+                    <input id="aiImagePrompt" type="text" placeholder="E.g., 'colorful rainbow background for kids'" 
+                        style="width: 100%; padding: 6px; border: none; border-radius: 4px; font-size: 11px; margin-bottom: 5px;">
+                    <button id="btnGenerateAiImage" type="button"
+                        style="width: 100%; background: white; color: #667eea; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">
+                        ✨ Generate AI Background
+                    </button>
+                    <div id="aiImageStatus" style="font-size: 10px; color: white; margin-top: 5px; min-height: 12px;"></div>
+                </div>
             </div>
             <div class="controls__group">
                 <label>Name Color</label>
@@ -241,6 +434,14 @@
             <div class="controls__group">
                 <label>Accent Color</label>
                 <input id="accentColor" type="color" value="#116a4c" />
+            </div>
+            <div class="controls__group">
+                <label>Address Color</label>
+                <input id="addressColor" type="color" value="#116a4c" />
+            </div>
+            <div class="controls__group">
+                <label>Foundation Color</label>
+                <input id="foundationColor" type="color" value="#116a4c" />
             </div>
             <div class="controls__group">
                 <label>Photo Position</label>
@@ -265,6 +466,10 @@
                 <input id="schoolFontSize" type="range" min="20" max="45" value="30" />
             </div>
             <div class="controls__group">
+                <label>Session Size (pt)</label>
+                <input id="sessionFontSize" type="range" min="10" max="30" value="18" />
+            </div>
+            <div class="controls__group">
                 <label>Body Size (pt)</label>
                 <input id="bodyFontSize" type="range" min="10" max="25" value="12" />
             </div>
@@ -275,6 +480,15 @@
             <div class="controls__group">
                 <label>Photo Width (mm)</label>
                 <input id="photoWidth" type="range" min="30" max="70" value="45" />
+            </div>
+            <div class="controls__group" style="flex: 0 0 auto; justify-content: center;">
+                <label style="cursor: pointer;"><input type="checkbox" id="boldSession" checked> Bold Session?</label>
+            </div>
+            <div class="controls__group" style="flex: 0 0 auto; justify-content: center;">
+                <label style="cursor: pointer;"><input type="checkbox" id="boldAddress"> Bold Address?</label>
+            </div>
+            <div class="controls__group" style="flex: 0 0 auto; justify-content: center;">
+                <label style="cursor: pointer;"><input type="checkbox" id="boldFoundation"> Bold Foundation?</label>
             </div>
         </div>
 
@@ -310,6 +524,63 @@
                     <button id="printBtn" type="button" style="background:var(--c-accent); color:white;">Print Single
                         Certificate</button>
                 </div>
+                
+                <div class="controls__group">
+                    <label>&nbsp;</label>
+                    <button id="downloadPdfBtn" type="button" style="background:#e74c3c; color:white;">📄 Download as PDF</button>
+                </div>
+                
+                <div class="controls__group">
+                    <label>&nbsp;</label>
+                    <div style="display: flex; gap: 5px;">
+                        <button id="undoBtn" type="button" style="background:#95a5a6; color:white; flex: 1;" disabled>↶ Undo</button>
+                        <button id="redoBtn" type="button" style="background:#95a5a6; color:white; flex: 1;" disabled>↷ Redo</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Watermark Section -->
+            <h3 style="margin-top:20px; border-bottom:2px solid #ddd; padding-bottom:10px; color:var(--c-accent);">
+                Watermark (Optional)
+            </h3>
+            <div class="controls__row">
+                <div class="controls__group">
+                    <label><input type="checkbox" id="watermarkEnabled"> Enable Watermark</label>
+                </div>
+                
+                <div class="controls__group">
+                    <label>Watermark Type</label>
+                    <select id="watermarkType">
+                        <option value="text">Text</option>
+                        <option value="image">Image</option>
+                    </select>
+                </div>
+                
+                <div class="controls__group" id="watermarkTextGroup">
+                    <label>Watermark Text</label>
+                    <input id="watermarkText" type="text" placeholder="DRAFT" value="DRAFT" />
+                </div>
+                
+                <div class="controls__group" id="watermarkImageGroup" style="display: none;">
+                    <label>Watermark Image</label>
+                    <input id="watermarkImageUpload" type="file" accept="image/*" />
+                </div>
+                
+                <div class="controls__group">
+                    <label>Opacity (%)</label>
+                    <input id="watermarkOpacity" type="range" min="10" max="100" value="30" />
+                    <span id="watermarkOpacityValue">30%</span>
+                </div>
+                
+                <div class="controls__group">
+                    <label>Position</label>
+                    <select id="watermarkPosition">
+                        <option value="center">Center</option>
+                        <option value="diagonal">Diagonal</option>
+                        <option value="top-right">Top Right</option>
+                        <option value="bottom-right">Bottom Right</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -317,6 +588,16 @@
         <div id="panelBulk" style="display: none;">
             <h3 style="margin-top:20px; border-bottom:2px solid #ddd; padding-bottom:10px; color:var(--c-accent);">4.
                 Bulk Data Source (Choose Your Method)</h3>
+
+            <!-- Photo Matching Instructions -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 12px; border-radius: 8px; margin-bottom: 15px; color: white;">
+                <div style="font-weight: bold; margin-bottom: 5px; font-size: 13px;">📸 Photo Matching Options:</div>
+                <div style="font-size: 11px; line-height: 1.6;">
+                    <strong>Option 1:</strong> Name your photos to match student names (e.g., "John Doe.jpg" for student "John Doe")<br>
+                    <strong>Option 2:</strong> Add a "Photo" column in your Excel with the exact photo filename for each student<br>
+                    <span style="opacity: 0.9;">Example Excel: Name = "John Doe", Photo = "IMG_001.jpg"</span>
+                </div>
+            </div>
 
             <div class="data-source-grid"
                 style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
@@ -326,7 +607,11 @@
                     <label style="font-weight:bold; color:var(--c-accent); display:block; margin-bottom:8px;">A. Bulk
                         Excel Upload</label>
                     <input id="excelUpload" type="file" accept=".xlsx, .xls, .csv" style="width:100%;" />
-                    <p class="hint">Upload .xlsx with "Name" column.</p>
+                    <p class="hint">Upload .xlsx with "Name" column (required) and optional "Photo" column to specify photo filenames.</p>
+                    <p class="hint" style="font-size: 10px; color: #3498db; margin-top: 5px;">💡 Example: If photo is "IMG001.jpg", add "Photo" column with value "IMG001.jpg" for that student.</p>
+                    <button id="btnShowExcelExample" type="button" style="font-size: 11px; background: #9b59b6; color: white; padding: 6px 12px; border: none; border-radius: 4px; margin-top: 8px; cursor: pointer; font-weight: bold; display: block; width: 100%;">
+                        📋 Show Excel Format Example
+                    </button>
                 </div>
 
                 <!-- Option B: Manual Names -->
@@ -411,14 +696,17 @@
                 <!-- Header -->
                 <header class="cert-header-top">
                     <!-- School Code Top Right -->
-                    <div class="school-code" id="vSchoolCode">Affiliation No: XXXXXX</div>
+                    <div class="school-code" id="vSchoolCode">CBSE Affiliation : 1031107</div>
 
                     <div class="logo-box-top">
                         <img id="logoImg" alt="School Logo" style="display: none;" />
                         <div class="logo-placeholder" id="logoPlaceholder">LOGO</div>
                     </div>
                     <div class="school-info-top">
-                        <div class="cert-school" id="vSchoolName">DELHI WORLD PUBLIC SCHOOL, ASHTA</div>
+                        <div class="cert-school" id="vSchoolName">Delhi World Public School, Ashta</div>
+                        <div class="cert-address" id="vSchoolAddress">Shujalpur Road, Ashta, Madhya Pradesh</div>
+                        <div class="cert-foundation" id="vSchoolFoundation">(Under the aegis of Delhi World Foundation)</div>
+                        <div class="cert-session" id="vSession">SESSION 2025–26</div>
                     </div>
                 </header>
 
@@ -439,9 +727,9 @@
                         <div class="divider-line"></div>
                         <div class="present-line">This is to certify that</div>
                         <div class="cert-text-block">
-                            <div class="cert-text-small">has successfully completed</div>
                             <div class="class-name-large" id="vStudentClass">UPPER KINDERGARTEN</div>
                             <div class="student-name" id="vStudentName">Student Name Here</div>
+                            <div class="cert-text-small">has successfully completed</div>
                             <div class="cert-body-text" id="vCertText">
                                 Congratulations on your outstanding achievement in completing
                                 <br><strong>UPPER KINDERGARTEN</strong><br>
@@ -486,6 +774,9 @@
                         </div>
                         <div class="school-info-top">
                             <div class="cert-school tpl-school"></div>
+                            <div class="cert-address tpl-address"></div>
+                            <div class="cert-foundation tpl-foundation"></div>
+                            <div class="cert-session tpl-session"></div>
                         </div>
                     </header>
                     <div class="cert-content-grid">
@@ -503,9 +794,9 @@
                             <div class="divider-line"></div>
                             <div class="present-line">This is to certify that</div>
                             <div class="cert-text-block">
-                                <div class="cert-text-small">has successfully completed</div>
                                 <div class="class-name-large tpl-class"></div>
                                 <div class="student-name tpl-name"></div>
+                                <div class="cert-text-small">has successfully completed</div>
                                 <div class="cert-body-text tpl-body"></div>
                             </div>
                             <div class="divider-line-bottom"></div>
@@ -529,12 +820,6 @@
     </main>
 
     <script src="script.js"></script>
-</body>
-
-</html>
-
-    <script src="script.js"></script>
-  </main>
 </body>
 
 </html>
